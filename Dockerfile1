@@ -1,0 +1,12 @@
+ARG ALPINE_VERSION="latest"
+FROM alpine:$ALPINE_VERSION
+
+WORKDIR /
+
+RUN apk update
+
+RUN apk add --no-cache netcat-openbsd
+
+EXPOSE 9091
+
+ENTRYPOINT [ "nc", "-l","0.0.0.0","9091"]

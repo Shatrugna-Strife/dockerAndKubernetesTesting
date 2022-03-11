@@ -1,0 +1,18 @@
+#### Commands to start netcat Server ####
+nc -l -p 9094 / nc -l 0.0.0.0 9094
+nc localhost 9094
+
+#### Docker build ####
+sudo docker build . -t my-node-app --build-arg NODE_VERSION=8 --build-arg APP_DIR=/usr/src/app
+sudo docker build . -t codeservertest:latest
+
+#### Docker Run ####
+sudo docker run --name testing #--network host -p 9091:9091 -ti -d alpine:latest
+docker run --name testing1 -p 9091:9091 -d codeservertest:latest
+
+#### Docker exec ####
+sudo docker exec -it testing sh
+sudo docker exec -it testing bash
+
+#### check service running on port ####
+netstat -tln
