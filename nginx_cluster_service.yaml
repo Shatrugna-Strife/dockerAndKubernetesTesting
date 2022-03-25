@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-cluster ## name of the Service
+spec:
+  # type: ClusterIP
+  selector:
+    app: nginx ## Serves as a label which should be refrenced in a Pod / Deployment manifest file
+  ## department: ##same as above
+  ports:
+  - protocol: TCP ##The default is TCP
+    port: 80 ##Exposes the service within the cluster. Also, other Pods use this to access the Service
+    # targetPort: 30006 ##The service sends request while containers accept traffic on this port.
+    

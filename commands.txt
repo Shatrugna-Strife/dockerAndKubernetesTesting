@@ -1,3 +1,9 @@
+#### docker build and run commands ####      // RUN these
+sudo docker build . -t codeservertest:latest
+docker run --name testing1 --network host -p 9091:9091 -d codeservertest:latest
+docker run --name testing1 -p 9091:9091 -e WORK_DIR=/work -v /mnt/c/Work:/work -d codeservertest:latest
+
+
 #### Commands to start netcat Server ####
 nc -l -p 9094 / nc -l 0.0.0.0 9094
 nc localhost 9094
@@ -16,3 +22,32 @@ sudo docker exec -it testing bash
 
 #### check service running on port ####
 netstat -tln
+
+#### kubectl proxy ####
+kubectl proxy --address='0.0.0.0' --port=8001 --accept-hosts='.*'
+
+### kubernetes dashboard ###
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
+
+kubectl describe secret -n kube-system | grep deployment -A 12
+
+kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard 8080:443 --address='0.0.0.0'
+
+### kubeadm ###
+kubeadm join 192.168.1.39:6443 --token lhv8l5.gx9r8lsrhs9q8m9g \
+        --discovery-token-ca-cert-hash sha256:aa6ab3913869a3ccd68cedccda4c1cd8b0a15e1aaf3c08b44cffc4782a56aea6
+
+sudo vim /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+sudo systemctl restart docker
+
+sudo kubeadm init --ignore-preflight-errors=NumCPU --pod-network-cidr=10.244.0.0/16
+
+kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml
+
+sudo swapoff -a  
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+sudo swapoff -a  
