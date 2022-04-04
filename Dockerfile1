@@ -1,7 +1,9 @@
 ARG ALPINE_VERSION="latest"
 FROM alpine:$ALPINE_VERSION
 
-WORKDIR /
+RUN mkdir -p /prajwal/house
+
+WORKDIR /prajwal
 
 RUN apk update
 

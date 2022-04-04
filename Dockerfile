@@ -1,7 +1,7 @@
 ARG UBUNTU_VERSION="latest"
 FROM ubuntu:$UBUNTU_VERSION
 
-WORKDIR /
+WORKDIR /root
 
 RUN apt-get update
 
