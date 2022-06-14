@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: capstone-aerospike-kafka
+    labels:
+        app: capstone-aerospike-kafka
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: capstone-aerospike-kafka
+    template:
+        metadata:
+            labels:
+                app: capstone-aerospike-kafka
+        spec:
+            containers:
+            - name: capstone-aerospike-container
+              image: aerospike/aerospike-server
+              ports:
+              - containerPort: 3000
+              - containerPort: 3001
+              - containerPort: 3002
+              volumeMounts:
+              - mountPath: /opt/aerospike/data
+                name: aerospike-storage
+            - name: kafka-zookeeper
+              image: vincentstrife/kafka-zookeeper:latest
+            - name: kafka-server
+              image: vincentstrife/kafka-server:latest
+              ports:
+              - containerPort: 9092
+            volumes:
+            - name: aerospike-storage
+              persistentVolumeClaim:
+                claimName: aerospike-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aerospike-service ## name of the Service
+spec:
+  type: ClusterIP
+  selector:
+    app: capstone-aerospike-kafka ## Serves as a label which should be refrenced in a Pod / Deployment manifest file
+  ## department: ##same as above
+  ports:
+  - name: "1"
+    protocol: TCP ##The default is TCP
+    port: 3000
+  - name: "2"
+    protocol: TCP ##The default is TCP
+    port: 3001
+  - name: "3"
+    protocol: TCP ##The default is TCP
+    port: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service ## name of the Service
+spec:
+  type: ClusterIP
+  selector:
+    app: capstone-aerospike-kafka ## Serves as a label which should be refrenced in a Pod / Deployment manifest file
+  ## department: ##same as above
+  ports:
+  - protocol: TCP ##The default is TCP
+    port: 9092
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aerospike-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

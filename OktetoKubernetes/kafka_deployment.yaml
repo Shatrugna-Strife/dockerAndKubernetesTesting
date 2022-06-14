@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: kafka-deploy
+    labels:
+        app: kafka
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: kafka
+    template:
+        metadata:
+            labels:
+                app: kafka
+        spec:
+            containers:
+            - name: kafka-zookeeper
+              image: vincentstrife/kafka-zookeeper:latest
+            - name: kafka-server
+              image: vincentstrife/kafka-server:latest
+              ports:
+              - containerPort: 9092

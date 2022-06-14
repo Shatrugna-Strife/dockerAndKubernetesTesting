@@ -1,0 +1,28 @@
+sudo docker run --name pgadmin --network jenkins  -p 8001:80 -e 'PGADMIN_DEFAULT_EMAIL=admin@admin.com' -e 'PGADMIN_DEFAULT_PASSWORD=admin123' -d dpage/pgadmin4
+
+sudo docker run --name postgres --network jenkins --network-alias postgres -e POSTGRES_PASSWORD=admin123 -e POSTGRES_USER=shatru -p 5432:5432 -d postgres
+
+entity Company {
+    Name String required
+    CeoName String required
+    Contact String required
+    SalesManagerContact String required
+    HeadquaterAddress String required
+    BranchAdress String required //List basically but concat
+    Organigram String required
+    Email String required // List basically
+    Phone String required // List basically
+    CompanyMainActivity String required
+    CompanyWorkDescription TextBlob required
+    SectorOfCompanyActivityIndustry String required //Drop down Iguess
+    CompanyWorkArea String required //List
+    CompanyDateCreation LocalDate required
+    CompanyBranch String required // List I guess
+    Partenaires String required //List
+    Logo ImageBlob required
+    SocialMedia String required //DropDown
+}
+
+relationship OneToOne{
+	Company{user(login)} to User
+}

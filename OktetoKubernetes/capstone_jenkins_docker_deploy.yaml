@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: capstone-jenkins-docker-deploy
+    labels:
+        app: capstone-jenkins-docker
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: capstone-jenkins-docker
+    template:
+        metadata:
+            labels:
+                app: capstone-jenkins-docker
+        spec:
+            containers:
+            - name: capstone-jenkins-docker-container
+              image: vincentstrife/jenkins-capstone:latest
+              ports:
+              - containerPort: 8080
+              env:
+              - name: DOCKER_HOST
+                value: "tcp://localhost:2375"
+              # volumeMounts:
+              # - name: docker-mount
+              #   mountPath: /var/run/docker.sock
+              # securityContext:
+              #   privileged: true
+            # - name: docker-dind-container
+            #   image: docker:dind
+            #   securityContext:
+            #     allowPrivilegeEscalation: true
+            # volumes:
+            # - name: docker-mount
+            #   hostPath:
+            #     path: /var/run/docker.sock
+              # mountPath: /var/run/docker.sock
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-jenkins-docker-load-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-jenkins-docker
+  ports:
+      # By default the `targetPort` is set to the same value as the `port` field.
+    - port: 8080
+      targetPort: 8080
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+      # nodePort: 30007              

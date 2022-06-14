@@ -1,0 +1,1 @@
+sudo docker run --name prometheus -p 9090:9090 -v /mnt/c/Users/shatrugna/Desktop/TestDocker/CustomGrokExporter/prometheus.yml:/etc/prometheus/prometheus.yml -d prom/prometheus

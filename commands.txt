@@ -51,3 +51,10 @@ kubectl apply -f https://github.com/coreos/flannel/raw/master/Documentation/kube
 sudo swapoff -a  
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
 sudo swapoff -a  
+
+
+
+//mongodb
+sudo docker run -d --name mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=system -e MONGO_INITDB_ROOT_PASSWORD=admin123 mongo
+
+mongodb://system:admin123@localhost:27017/

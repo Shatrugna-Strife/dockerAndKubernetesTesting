@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: capstone-all-microservices-deploy
+    labels:
+        app: capstone-all-microservices
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: capstone-all-microservices
+    template:
+        metadata:
+            labels:
+                app: capstone-all-microservices
+        spec:
+            containers:
+            - name: capstone-create-update-container
+              image: {create-update-image}:latest
+              ports:
+              - containerPort: 8081
+            - name: capstone-dummy-aadhar-container
+              image: {dummy-aadhar-image}:latest
+              ports:
+              - containerPort: 8022
+            - name: capstone-etl-container
+              image: {etl-image}:latest
+              ports:
+              - containerPort: 8095
+            - name: capstone-express-backend-container
+              image: {express-backend-image}:latest
+              ports:
+              - containerPort: 8080
+            - name: capstone-fetch-container
+              image: {fetch-image}:latest
+              ports:
+              - containerPort: 8083
+            - name: capstone-internal-update-container
+              image: {internal-update-image}:latest
+              ports:
+              - containerPort: 8085
+            - name: capstone-dummy-pan-container
+              image: {dummy-pan-image}:latest
+              ports:
+              - containerPort: 8011
+            - name: capstone-swimlane-container
+              image: {swimlane-image}:latest
+              ports:
+              - containerPort: 8105
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-create-load-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-all-microservices
+  ports:
+      # By default the `targetPort` is set to the same value as the `port` field.
+    - port: 8081
+      targetPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-fetch-load-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-all-microservices
+  ports:
+      # By default the `targetPort` is set to the same value as the `port` field.
+    - port: 8083
+      targetPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: capstone-express-backend-load-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-all-microservices
+  ports:
+      # By default the `targetPort` is set to the same value as the `port` field.
+    - port: 8080
+      targetPort: 8080

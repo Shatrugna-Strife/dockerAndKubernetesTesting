@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: sass-slack
+    labels:
+        app: sass-slack
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: sass-slack
+    template:
+        metadata:
+            labels:
+                app: sass-slack
+        spec:
+            containers:
+            - name: sass-slack-container
+              image: vincentstrife/sass-slack-attendance

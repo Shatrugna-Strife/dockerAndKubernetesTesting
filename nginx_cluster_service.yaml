@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: nginx-cluster ## name of the Service
 spec:
-  # type: ClusterIP
+  type: ClusterIP
   selector:
     app: nginx ## Serves as a label which should be refrenced in a Pod / Deployment manifest file
   ## department: ##same as above
